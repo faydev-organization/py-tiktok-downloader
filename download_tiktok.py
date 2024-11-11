@@ -2,43 +2,50 @@ import yt_dlp
 import os
 import sys
 import time
-import tkinter as tk
-from tkinter import filedialog
+import platform
 
 def choose_download_folder():
-    # Open a file dialog to choose the folder
-    root = tk.Tk()
-    root.withdraw()  # Hide the root window
-    folder_selected = filedialog.askdirectory(title="Select Folder to Save the Video")
-
-    # Return the folder path selected by the user
-    return folder_selected
+    # Menentukan lokasi folder berdasarkan sistem operasi
+    system_platform = platform.system().lower()
+    
+    if system_platform == 'windows':  # Untuk Windows
+        return os.path.join(os.path.expanduser("~"), "Desktop")
+    elif system_platform == 'darwin':  # Untuk macOS
+        return os.path.join(os.path.expanduser("~"), "Desktop")
+    elif system_platform == 'linux':  # Untuk Linux
+        return os.path.join(os.path.expanduser("~"), "Desktop")
+    else:  # Untuk Android
+        # Menentukan folder default di Android (Movies atau Pictures)
+        # Folder Movies di perangkat Android yang mendukung galeri
+        return os.path.join(os.path.expanduser("~"), "Movies")
 
 def download_tiktok_video(url, output_folder=None):
     if not output_folder:
-        # If no folder was chosen, let the user pick a folder
+        # Jika tidak ada folder yang dipilih, gunakan folder default berdasarkan platform
         output_folder = choose_download_folder()
 
-        # If user cancels, exit the script
-        if not output_folder:
-            sys.exit(1)
+    # Jika folder tidak valid, keluar dari script
+    if not output_folder:
+        sys.exit(1)
 
-    # Use the video ID from the URL for naming the downloaded video
+    # Gunakan video ID dari URL untuk penamaan file video yang diunduh
     video_id = url.split('/')[-1]
     output_path = os.path.join(output_folder, f"tiktok_video_{video_id}_{int(time.time())}.mp4")
 
-    # yt-dlp options
+    # Opsi yt-dlp
     ydl_opts = {
         'format': 'best',
         'outtmpl': output_path,
-        'quiet': False, 
-        'verbose': False,  
+        'quiet': False,
+        'verbose': False,
     }
 
     try:
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url])
+        print(f"Video berhasil diunduh di: {output_path}")
     except Exception as e:
+        print(f"Terjadi kesalahan saat mengunduh video: {e}")
         sys.exit(1)
 
 def download_multiple_videos(urls, output_folder=None):
@@ -46,12 +53,13 @@ def download_multiple_videos(urls, output_folder=None):
         download_tiktok_video(url, output_folder)
 
 if __name__ == "__main__":
-    # Check if URLs are provided as arguments
+    # Memeriksa apakah URL diberikan sebagai argumen
     if len(sys.argv) < 2:
+        print("Penggunaan: python script.py <URL1> <URL2> ...")
         sys.exit(1)
 
-    # Get all URLs from the command line arguments
+    # Mendapatkan semua URL dari argumen baris perintah
     urls = sys.argv[1:]
 
-    # Call the function to download all videos
+    # Memanggil fungsi untuk mengunduh semua video
     download_multiple_videos(urls)
