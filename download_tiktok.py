@@ -1,7 +1,6 @@
 import yt_dlp
 import os
 import sys
-import time
 from pathlib import Path
 
 def get_default_download_folder():
@@ -19,17 +18,23 @@ def get_default_download_folder():
 def choose_download_folder(platform, url=None):
     base_folder = get_default_download_folder()
 
-    if platform == "youtube":
-        if "/shorts/" in url:
-            platform_folder = os.path.join(base_folder, "youtube", "shorts")
-        else:
-            platform_folder = os.path.join(base_folder, "youtube")
+    user_choice = input(f"Lokasi unduhan default adalah {base_folder}. Apakah Anda ingin memilih folder lain? (y/n): ").lower()
+    
+    if user_choice == 'y':
+        output_folder = input("Masukkan path folder tujuan untuk unduhan: ")
+        platform_folder = Path(output_folder)
     else:
-        platform_folder = os.path.join(base_folder, platform)
-    
-    if not os.path.exists(platform_folder):
-        os.makedirs(platform_folder)
-    
+        if platform == "youtube":
+            if "/shorts/" in url:
+                platform_folder = base_folder / "youtube" / "shorts"
+            else:
+                platform_folder = base_folder / "youtube"
+        else:
+            platform_folder = base_folder / platform
+
+    if not platform_folder.exists():
+        platform_folder.mkdir(parents=True, exist_ok=True)
+
     return platform_folder
 
 def get_platform_from_url(url):
