@@ -23,7 +23,7 @@ const UrlInput: React.FC<UrlInputProps> = ({
       <div className="flex items-center gap-3">
         <input
           type="text"
-          placeholder={`Enter TikTok URL #${index + 1}`}
+          placeholder={`Enter your URL #${index + 1}`}
           value={url}
           onChange={(e) => onUrlChange(index, e.target.value)}
           required

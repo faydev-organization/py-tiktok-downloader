@@ -61,8 +61,11 @@ export default function Home() {
   return (
     <section className="flex justify-center min-h-screen">
       <div className="pt-24">
-        <h1 className="text-4xl font-bold">TikTok Video Downloader</h1>
-        <form onSubmit={handleSubmit} className="mt-10">
+        <h1 className="text-2xl mx-6 font-bold">
+          TikTok, Twitter, Instagram Reels, and YouTube with Multiple Video
+          Downloaders
+        </h1>
+        <form onSubmit={handleSubmit} className="mt-10 mx-5">
           {urls.map((url, index) => (
             <UrlInput
               key={index}
