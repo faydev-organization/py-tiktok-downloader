@@ -2,6 +2,8 @@ import yt_dlp
 import os
 import sys
 from pathlib import Path
+import tkinter as tk
+from tkinter import filedialog
 
 def get_default_download_folder():
     home = Path.home()
@@ -18,12 +20,15 @@ def get_default_download_folder():
 def choose_download_folder(platform, url=None):
     base_folder = get_default_download_folder()
 
-    user_choice = input(f"Lokasi unduhan default adalah {base_folder}. Apakah Anda ingin memilih folder lain? (y/n): ").lower()
-    
-    if user_choice == 'y':
-        output_folder = input("Masukkan path folder tujuan untuk unduhan: ")
-        platform_folder = Path(output_folder)
+    # Membuka dialog folder menggunakan Tkinter
+    root = tk.Tk()
+    root.withdraw()  # Menyembunyikan jendela utama
+    user_choice = filedialog.askdirectory(initialdir=base_folder, title="Pilih Folder untuk Mengunduh")
+
+    if user_choice:
+        platform_folder = Path(user_choice)
     else:
+        # Jika tidak memilih folder, gunakan folder default
         if platform == "youtube":
             if "/shorts/" in url:
                 platform_folder = base_folder / "youtube" / "shorts"
