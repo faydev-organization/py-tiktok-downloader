@@ -20,24 +20,30 @@ export default async function handler(
       });
     }
 
+    const failedDownloads: string[] = [];
+
     try {
       const pythonScriptPath = path.join(process.cwd(), "download_tiktok.py");
 
       // Loop through the list of URLs and download each video
       for (let url of urls) {
         try {
-          // Execute the Python script synchronously
+          // Execute the Python script synchronously for each URL
           const result = execSync(`python3 ${pythonScriptPath} "${url}"`);
           console.log(`Download successful for ${url}: ${result.toString()}`);
         } catch (error: any) {
           console.error(
             `Error downloading video from ${url}: ${error.message}`
           );
-          return res.status(500).json({
-            success: false,
-            error: `Failed to download ${url}: ${error.message}`,
-          });
+          failedDownloads.push(url);
         }
+      }
+
+      if (failedDownloads.length > 0) {
+        return res.status(500).json({
+          success: false,
+          error: `Failed to download videos: ${failedDownloads.join(", ")}`,
+        });
       }
 
       return res.status(200).json({ success: true });
