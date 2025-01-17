@@ -5,12 +5,10 @@ export default function Home() {
   const [urls, setUrls] = useState<string[]>([""]);
   const [status, setStatus] = useState<string>("");
 
-  // Handle form submission to download videos
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setStatus("Downloading...");
 
-    // Filter out any empty URLs from the input
     const urlList = urls.filter((url) => url.trim() !== "");
 
     if (urlList.length === 0) {
@@ -38,19 +36,16 @@ export default function Home() {
     }
   };
 
-  // Handle changes in the input fields dynamically
   const handleUrlChange = (index: number, value: string) => {
     const newUrls = [...urls];
     newUrls[index] = value;
     setUrls(newUrls);
   };
 
-  // Add a new input field for a URL
   const addUrlInput = () => {
     setUrls([...urls, ""]);
   };
 
-  // Remove a URL input field, but prevent removal if there's only one URL
   const removeUrlInput = (index: number) => {
     if (urls.length > 1) {
       const newUrls = urls.filter((_, i) => i !== index);
@@ -61,11 +56,11 @@ export default function Home() {
   return (
     <section className="flex justify-center min-h-screen">
       <div className="pt-24">
-        <h1 className="text-2xl mx-6 font-bold">
+        <h1 className="text-2xl mx-6 lg:mx-0 font-bold">
           TikTok, Twitter, Instagram Reels, and YouTube with Multiple Video
           Downloaders
         </h1>
-        <form onSubmit={handleSubmit} className="mt-10 mx-5">
+        <form onSubmit={handleSubmit} className="mt-10 mx-5 lg:mx-0">
           {urls.map((url, index) => (
             <UrlInput
               key={index}
